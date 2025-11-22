@@ -173,12 +173,165 @@ const ActiveEmergencies = () => {
         status: "completed",
         location: {
           address: "Nehru Place, New Delhi",
-          latitude: 28.5921,
-          longitude: 77.046,
+          latitude: 28.5505,
+          longitude: 77.2506,
         },
         timeReported: new Date(now - 1000 * 60 * 120).toISOString(), // 2h ago
         victims: 1,
         assignedAmbulanceId: "AMB-003",
+      },
+      {
+        id: "EMG-006",
+        type: "Stroke",
+        description: "Patient showing signs of stroke, facial drooping",
+        priority: "critical",
+        status: "new",
+        location: {
+          address: "Vasant Vihar, New Delhi",
+          latitude: 28.5574,
+          longitude: 77.1582,
+        },
+        timeReported: new Date(now - 1000 * 60 * 3).toISOString(), // 3 min ago
+        victims: 1,
+        specialRequirements: ["Stroke Unit", "Immediate Transfer"],
+      },
+      {
+        id: "EMG-007",
+        type: "Fire Accident",
+        description: "Burn injuries from kitchen fire",
+        priority: "high",
+        status: "awaiting_dispatch",
+        location: {
+          address: "Rohini Sector 18, New Delhi",
+          latitude: 28.7418,
+          longitude: 77.1172,
+        },
+        timeReported: new Date(now - 1000 * 60 * 12).toISOString(), // 12 min ago
+        victims: 2,
+        specialRequirements: ["Burn Care", "Intensive Care"],
+      },
+      {
+        id: "EMG-008",
+        type: "Diabetic Emergency",
+        description: "Low blood sugar, patient unconscious",
+        priority: "high",
+        status: "new",
+        location: {
+          address: "Janakpuri, New Delhi",
+          latitude: 28.6219,
+          longitude: 77.0855,
+        },
+        timeReported: new Date(now - 1000 * 60 * 6).toISOString(), // 6 min ago
+        victims: 1,
+        specialRequirements: ["Glucose Administration"],
+      },
+      {
+        id: "EMG-009",
+        type: "Pregnancy Complication",
+        description: "Woman in labor, complications reported",
+        priority: "critical",
+        status: "en_route",
+        location: {
+          address: "Saket, New Delhi",
+          latitude: 28.5244,
+          longitude: 77.2066,
+        },
+        timeReported: new Date(now - 1000 * 60 * 25).toISOString(), // 25 min ago
+        victims: 1,
+        assignedAmbulanceId: "AMB-004",
+        timeEstimatedArrival: "7 min",
+        specialRequirements: ["Obstetric Care", "NICU Ready"],
+      },
+      {
+        id: "EMG-010",
+        type: "Seizure",
+        description: "Patient having continuous seizures",
+        priority: "high",
+        status: "awaiting_dispatch",
+        location: {
+          address: "Lajpat Nagar, New Delhi",
+          latitude: 28.5678,
+          longitude: 77.2431,
+        },
+        timeReported: new Date(now - 1000 * 60 * 10).toISOString(), // 10 min ago
+        victims: 1,
+        specialRequirements: ["Neurological Care"],
+      },
+      {
+        id: "EMG-011",
+        type: "Allergic Reaction",
+        description: "Severe allergic reaction, anaphylaxis suspected",
+        priority: "critical",
+        status: "new",
+        location: {
+          address: "Greater Kailash, New Delhi",
+          latitude: 28.5494,
+          longitude: 77.2426,
+        },
+        timeReported: new Date(now - 1000 * 60 * 2).toISOString(), // 2 min ago
+        victims: 1,
+        specialRequirements: ["EpiPen", "Antihistamines"],
+      },
+      {
+        id: "EMG-012",
+        type: "Assault",
+        description: "Victim of physical assault, multiple injuries",
+        priority: "high",
+        status: "new",
+        location: {
+          address: "Tilak Nagar, New Delhi",
+          latitude: 28.6414,
+          longitude: 77.0952,
+        },
+        timeReported: new Date(now - 1000 * 60 * 7).toISOString(), // 7 min ago
+        victims: 1,
+        specialRequirements: ["Trauma Care", "Police Coordination"],
+      },
+      {
+        id: "EMG-013",
+        type: "Drowning",
+        description: "Child rescued from pool, CPR in progress",
+        priority: "critical",
+        status: "awaiting_dispatch",
+        location: {
+          address: "Chanakyapuri, New Delhi",
+          latitude: 28.5984,
+          longitude: 77.1846,
+        },
+        timeReported: new Date(now - 1000 * 60 * 4).toISOString(), // 4 min ago
+        victims: 1,
+        specialRequirements: ["Pediatric Care", "Ventilator"],
+      },
+      {
+        id: "EMG-014",
+        type: "Drug Overdose",
+        description: "Suspected drug overdose, patient unresponsive",
+        priority: "critical",
+        status: "new",
+        location: {
+          address: "Hauz Khas, New Delhi",
+          latitude: 28.5494,
+          longitude: 77.2001,
+        },
+        timeReported: new Date(now - 1000 * 60 * 9).toISOString(), // 9 min ago
+        victims: 1,
+        specialRequirements: ["Toxicology", "Naloxone"],
+      },
+      {
+        id: "EMG-015",
+        type: "Animal Bite",
+        description: "Dog bite, bleeding profusely",
+        priority: "medium",
+        status: "completed",
+        location: {
+          address: "Rajouri Garden, New Delhi",
+          latitude: 28.6418,
+          longitude: 77.1212,
+        },
+        timeReported: new Date(now - 1000 * 60 * 90).toISOString(), // 1.5h ago
+        victims: 1,
+        assignedAmbulanceId: "AMB-005",
+        specialRequirements: ["Rabies Vaccine"],
       },
     ];
   }, []); // Empty dependency array means this only runs once
@@ -823,6 +976,7 @@ const ActiveEmergencies = () => {
         hospital_name: "AIIMS New Delhi", // Default hospital - you can make this dynamic later
         hospital_address: "Ansari Nagar, New Delhi, Delhi 110029",
         driver_phone: ambulance.driver.phone,
+        driver_name: ambulance.driver.name,
         patient_info: `${newEmergencyForm.patientName || "Unknown Patient"} - ${
           newEmergencyForm.description
         }`,
@@ -2130,3 +2284,4 @@ const ActiveEmergencies = () => {
 };
 
 export default ActiveEmergencies;
+

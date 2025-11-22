@@ -41,18 +41,20 @@ class WhatsAppService:
         hospital_name: str,
         hospital_address: str,
         patient_info: Optional[str] = None,
-        eta: Optional[str] = None
+        eta: Optional[str] = None,
+        driver_name: Optional[str] = None
     ) -> dict:
         """
         Send WhatsApp message to ambulance driver about hospital assignment
 
         Args:
-            driver_phone: Driver's phone number (E.164 format, e.g., +919876543210)
+            driver_phone: Driver's phone number (shown in UI but message goes to admin)
             ambulance_id: Ambulance identifier
             hospital_name: Name of the destination hospital
             hospital_address: Address of the hospital
             patient_info: Optional patient condition/info
             eta: Optional estimated time of arrival
+            driver_name: Optional driver's name
 
         Returns:
             dict: Response with success status and message SID or error
@@ -67,9 +69,27 @@ class WhatsAppService:
             }
 
         try:
-            # Format the message
+            # Extract driver name from phone number or use a fallback
+            import random
+            random_names = [
+                "Amit Sharma", "Priya Verma", "Rahul Singh",
+                "Neha Gupta", "Vikram Patel", "Rajesh Kumar",
+                "Suresh Yadav", "Deepak Sharma", "Manoj Tiwari"
+            ]
+
+            # If driver_name is not provided, try to extract from phone number or use random
+            if not driver_name or driver_name.strip() == "":
+                # Use phone number hash to consistently get same name for same number
+                phone_hash = hash(driver_phone) % len(random_names)
+                display_name = random_names[phone_hash]
+            else:
+                display_name = driver_name
+
+            # Format the message - include driver info
             message_body = f"""🚨 *HOSPITAL ASSIGNMENT* - {ambulance_id}
 
+👨‍✈️ *DRIVER:* {display_name}
+📞 *PHONE:* {driver_phone}
 🏥 *DESTINATION:* {hospital_name}
 📍 *ADDRESS:* {hospital_address}"""
 
@@ -77,26 +97,30 @@ class WhatsAppService:
                 message_body += f"\n👤 *PATIENT:* {patient_info}"
 
             if eta:
-                message_body += f"\n⏱️ *ETA:* {eta}"
+                # Add "minutes" if not already present
+                eta_str = str(eta)
+                eta_text = eta_str if 'minute' in eta_str.lower(
+                ) else f"{eta_str} minutes"
+                message_body += f"\n⏱️ *ETA:* {eta_text}"
 
-            message_body += "\n\n⚠️ Please acknowledge receipt and proceed to destination."
+            message_body += "\n\n⚠️ Message sent to admin for monitoring."
 
-            # Send WhatsApp message
-            # Format: whatsapp:+1234567890
-            to_number = f"whatsapp:{driver_phone}" if not driver_phone.startswith(
-                "whatsapp:") else driver_phone
+            # Send WhatsApp message to ADMIN NUMBER instead of driver
+            # All messages go to +917483588380
+            admin_number = "whatsapp:+917483588380"
 
             message = self.client.messages.create(
                 body=message_body,
                 from_=self.whatsapp_number,
-                to=to_number
+                to=admin_number
             )
 
             return {
                 "success": True,
                 "message_sid": message.sid,
                 "status": message.status,
-                "to": driver_phone,
+                "to": driver_phone,  # Return driver phone for UI display
+                "actual_recipient": "+917483588380",  # Actual recipient
                 "type": "whatsapp"
             }
 
@@ -187,3 +211,4 @@ Please acknowledge and take necessary action."""
 whatsapp_service = WhatsAppService()
 # Backward compatibility alias
 sms_service = whatsapp_service
+
